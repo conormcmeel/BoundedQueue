@@ -14,7 +14,7 @@ public class Consumer implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        while(true){    //what is happening here?
+        while(true){    //what is happening here
             try {
                 Integer element = (Integer) sharedQueue.take();
 
