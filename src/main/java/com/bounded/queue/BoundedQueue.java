@@ -54,7 +54,7 @@ public class BoundedQueue<T> {
         notEmpty.signal();
     }
 
-    public T take() throws InterruptedException {   //loook into handling this in JCIP
+    public T take() throws InterruptedException {   //look into handling this in JCIP
 
         final ReentrantLock lock = this.lock;
         lock.lock();
