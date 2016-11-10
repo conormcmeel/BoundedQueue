@@ -27,7 +27,7 @@ public class BoundedQueue<T> {
 
         try {
 
-            if(isBufferFull()) {
+            while(isBufferFull()) {
                 waitOnAvailableSlot();
             }
 
@@ -61,7 +61,7 @@ public class BoundedQueue<T> {
 
         try {
 
-            if(isBufferEmpty()) {
+            while(isBufferEmpty()) {
                 waitOnAvailableElement();
             }
 
