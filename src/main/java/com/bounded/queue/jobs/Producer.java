@@ -2,17 +2,16 @@ package com.bounded.queue.jobs;
 
 import com.bounded.queue.BoundedQueue;
 
-import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Producer implements Callable<Integer> {
+public class Producer implements Runnable {
 
     private final BoundedQueue sharedQueue;
     private String name;
 
     @Override
-    public Integer call() throws Exception {
+    public void run() {
 
         for(int i=0; i<10; i++){
             try {
@@ -22,7 +21,6 @@ public class Producer implements Callable<Integer> {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return null;
     }
 
     public Producer(BoundedQueue sharedQueue, String name) {

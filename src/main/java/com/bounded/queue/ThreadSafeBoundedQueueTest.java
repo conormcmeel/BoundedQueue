@@ -3,31 +3,28 @@ package com.bounded.queue;
 import com.bounded.queue.jobs.Consumer;
 import com.bounded.queue.jobs.Producer;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class ThreadSafeBoundedQueueTest {
 
     public static void main(String args[]) throws InterruptedException {
 
-        BoundedQueue<Integer> sharedQueue = new BoundedQueue<>(10);
 
-        Callable<Integer> producer1 = new Producer(sharedQueue, "producer-1");
-        Callable<Integer> producer2 = new Producer(sharedQueue, "producer-2");
-        Callable<Integer> consumer1 = new Consumer(sharedQueue, "consumer-1");
-        Callable<Integer> consumer2 = new Consumer(sharedQueue, "consumer-2");
+        BoundedQueue<Integer> sharedQueue = new BoundedQueue<>(5);
 
-        Collection<Callable<Integer>> callables = new HashSet<>();
-        callables.add(producer1);
-        callables.add(producer2);
-        callables.add(consumer1);
-        callables.add(consumer2);
+        Runnable producer1 = new Producer(sharedQueue, "producer-1");
+        Consumer consumer1 = new Consumer(sharedQueue, "consumer-1");
 
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        executorService.invokeAll(callables);
+        Producer producer2 = new Producer(sharedQueue, "producer-2");
+        Consumer consumer2 = new Consumer(sharedQueue, "consumer-2");
+
+        Thread t1 = new Thread(producer1);
+        Thread t2 = new Thread(consumer1);
+        Thread t3 = new Thread(producer2);
+        Thread t4 = new Thread(consumer2);
+
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
     }
 }
 

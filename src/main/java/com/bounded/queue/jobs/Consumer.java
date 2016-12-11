@@ -2,25 +2,20 @@ package com.bounded.queue.jobs;
 
 import com.bounded.queue.BoundedQueue;
 
-import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Consumer implements Callable<Integer> {
+public class Consumer implements Runnable {
 
     private final BoundedQueue sharedQueue;
     private String name;
 
     @Override
-    public Integer call() throws Exception {
+    public void run() {
 
         while(true){    //what is happening here
             try {
-                Integer element = (Integer) sharedQueue.take();
-
-                if(element==null) {
-                    int v = 0;
-                }
+                Integer element = (Integer) sharedQueue.take(1);
 
                 System.out.println(name + " consumed: "+ element);
             } catch (InterruptedException ex) {
