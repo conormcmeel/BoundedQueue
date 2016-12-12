@@ -9,24 +9,33 @@ public class Consumer implements Runnable {
 
     private final BoundedQueue sharedQueue;
     private String name;
+    private final Object lock;
+    private final Integer registeredObject;
 
     @Override
     public void run() {
 
-        while(true){    //what is happening here
+        synchronized (lock) {
             try {
-                Integer element = (Integer) sharedQueue.take(1);
+                while (!sharedQueue.contains(registeredObject)) {
+                    System.out.println("waiting on " + registeredObject);
+                    lock.wait();
+                }
 
-                System.out.println(name + " consumed: "+ element);
+                System.out.println(name + " consumed: " + sharedQueue.take(registeredObject));
             } catch (InterruptedException ex) {
                 Logger.getLogger(Consumer.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                lock.notifyAll();
             }
         }
     }
 
-    public Consumer(BoundedQueue sharedQueue, String name) {
+    public Consumer(BoundedQueue sharedQueue, String name, final Object lock, final Integer registeredObject) {
         this.sharedQueue = sharedQueue;
         this.name = name;
+        this.lock = lock;
+        this.registeredObject = registeredObject;
     }
 }
 
