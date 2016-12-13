@@ -10,6 +10,7 @@ public class Producer implements Runnable {
     private final BoundedQueue sharedQueue;
     private final String name;
     private final Object lock;
+    private final static Logger logger = Logger.getLogger(Consumer.class.getName());
 
     @Override
     public void run() {
@@ -23,7 +24,7 @@ public class Producer implements Runnable {
                     System.out.println(name + " produced: " + i);
 
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.log(Level.SEVERE, name + "interrupted", ex);
                     Thread.currentThread().interrupt();
                 } finally {
                     lock.notifyAll();

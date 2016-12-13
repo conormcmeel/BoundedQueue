@@ -11,6 +11,7 @@ public class Consumer implements Runnable {
     private final String name;
     private final Object lock;
     private final Integer registeredObject;
+    private final static Logger logger = Logger.getLogger(Consumer.class.getName());
 
     @Override
     public void run() {
@@ -27,7 +28,7 @@ public class Consumer implements Runnable {
                 System.out.println(name + " consumed: " + sharedQueue.take(registeredObject));
 
             } catch (InterruptedException ex) {
-                Logger.getLogger(Consumer.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, name + "interrupted", ex);
                 Thread.currentThread().interrupt();
             } finally {
                 lock.notifyAll();

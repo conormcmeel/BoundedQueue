@@ -72,7 +72,6 @@ public class BoundedQueue {
         return buffer.contains(element) ? true : false;
     }
 
-    //is this right????
     private Integer removeElement(Integer element) {
         return buffer.removeFirstOccurrence(element) ? element : null;
     }
