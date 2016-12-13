@@ -24,7 +24,7 @@ public class BoundedQueue {
         }
     }
 
-    public Integer take(Integer element) throws InterruptedException {   //look into handling this in JCIP
+    public Integer take(Integer element) throws InterruptedException {   //SHOULD I BE CATCHING THIS??
 
         synchronized (bufferAccessLock) {
 
