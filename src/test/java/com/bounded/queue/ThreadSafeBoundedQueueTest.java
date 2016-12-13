@@ -70,7 +70,7 @@ public class ThreadSafeBoundedQueueTest {
         t4.start();
         t5.start();
 
-        Thread.sleep(5000);
+        Thread.sleep(1000); //let threads finish before checking size
 
         assertEquals(1, queue.getSize());
     }
