@@ -17,7 +17,6 @@ public class Producer implements Runnable {
         synchronized (lock) {
 
             for(int i=1; i<=5; i++){
-
                 try {
 
                     sharedQueue.put(i);

@@ -9,6 +9,11 @@ public class BoundedQueue {
     private LinkedList<Integer> buffer;
     private final Object bufferAccessLock = new Object();
 
+    public BoundedQueue(int capacity) {
+        this.capacity = capacity;
+        this.buffer = new LinkedList<>();
+    }
+
     public void put(Integer element) throws InterruptedException {
 
         synchronized (bufferAccessLock) {
@@ -24,39 +29,6 @@ public class BoundedQueue {
         }
     }
 
-    public Integer take(Integer element) throws InterruptedException {   //SHOULD I BE CATCHING THIS??
-
-        synchronized (bufferAccessLock) {
-
-            while (isBufferEmpty()) {
-                waitOnAvailableElement();
-            }
-
-            Integer foundElement = null;
-            if(contains(element)) {
-                foundElement = removeElement(element);
-            }
-
-            informProducerQueueHasSpaceAvailable();
-
-            return foundElement;
-        }
-    }
-
-    //is this right????
-    private Integer removeElement(Integer element) {
-        return buffer.removeFirstOccurrence(element) ? element : null;
-    }
-
-    public boolean contains(Object element) {
-        return buffer.contains(element) ? true : false;
-    }
-
-    public BoundedQueue(int capacity) {
-        this.capacity = capacity;
-        this.buffer = new LinkedList<>();
-    }
-
     private boolean isBufferFull() {
         return capacity == currentSizeOfBuffer;
     }
@@ -69,12 +41,40 @@ public class BoundedQueue {
         bufferAccessLock.notifyAll();
     }
 
+    public Integer take(Integer element) throws InterruptedException {
+
+        synchronized (bufferAccessLock) {
+
+            while (isBufferEmpty()) {
+                waitOnAvailableElement();
+            }
+
+            Integer removedElement = null;
+            if(contains(element)) {
+                removedElement = removeElement(element);
+            }
+
+            informProducerQueueHasSpaceAvailable();
+
+            return removedElement;
+        }
+    }
+
     private boolean isBufferEmpty() {
         return 0 == currentSizeOfBuffer;
     }
 
     private void waitOnAvailableElement() throws InterruptedException {
         bufferAccessLock.wait();
+    }
+
+    public boolean contains(Object element) {
+        return buffer.contains(element) ? true : false;
+    }
+
+    //is this right????
+    private Integer removeElement(Integer element) {
+        return buffer.removeFirstOccurrence(element) ? element : null;
     }
 
     private void informProducerQueueHasSpaceAvailable() {
