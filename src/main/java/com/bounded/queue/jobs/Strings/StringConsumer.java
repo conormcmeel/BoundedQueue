@@ -13,7 +13,6 @@ public class StringConsumer implements Runnable {
     private final String registeredObject;
     private final static Logger logger = Logger.getLogger(StringConsumer.class.getName());
 
-    //too many arguments
     public StringConsumer(final BoundedQueue sharedQueue, final String name, final Object lock, final String registeredObject) {
         this.sharedQueue = sharedQueue;
         this.name = name;
@@ -38,8 +37,6 @@ public class StringConsumer implements Runnable {
             } catch (InterruptedException ex) {
                 logger.log(Level.SEVERE, name + "interrupted", ex);
                 Thread.currentThread().interrupt();
-            } finally {
-                lock.notifyAll();
             }
         }
     }

@@ -13,7 +13,6 @@ public class IntegerConsumer implements Runnable {
     private final Integer registeredObject;
     private final static Logger logger = Logger.getLogger(IntegerConsumer.class.getName());
 
-    //too many arguments
     public IntegerConsumer(final BoundedQueue sharedQueue, final String name, final Object lock, final Integer registeredObject) {
         this.sharedQueue = sharedQueue;
         this.name = name;
@@ -22,6 +21,7 @@ public class IntegerConsumer implements Runnable {
     }
 
     @Override
+
     public void run() {
 
         synchronized (lock) {
@@ -38,10 +38,12 @@ public class IntegerConsumer implements Runnable {
             } catch (InterruptedException ex) {
                 logger.log(Level.SEVERE, name + "interrupted", ex);
                 Thread.currentThread().interrupt();
-            } finally {
-                lock.notifyAll();
             }
         }
+    }
+
+    public Object getLock() {
+        return lock;
     }
 }
 
