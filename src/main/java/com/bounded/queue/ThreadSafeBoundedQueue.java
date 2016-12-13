@@ -3,7 +3,7 @@ package com.bounded.queue;
 import com.bounded.queue.jobs.Consumer;
 import com.bounded.queue.jobs.Producer;
 
-public class ThreadSafeBoundedQueueTest {
+public class ThreadSafeBoundedQueue {
 
     public static void main(String args[]) throws InterruptedException {
 
@@ -32,6 +32,7 @@ public class ThreadSafeBoundedQueueTest {
         t4.start();
         t5.start();
         t6.start();
+
     }
 }
 

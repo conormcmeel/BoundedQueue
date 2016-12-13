@@ -2,8 +2,6 @@ package com.bounded.queue;
 
 import java.util.LinkedList;
 
-import static java.util.stream.Collectors.toList;
-
 public class BoundedQueue {
 
     private int capacity;
@@ -34,7 +32,10 @@ public class BoundedQueue {
                 waitOnAvailableElement();
             }
 
-            Integer foundElement = findElement(element);
+            Integer foundElement = null;
+            if(contains(element)) {
+                foundElement = removeElement(element);
+            }
 
             informProducerQueueHasSpaceAvailable();
 
@@ -42,10 +43,9 @@ public class BoundedQueue {
         }
     }
 
-    private Integer findElement(Integer element) {
-        Integer foundElement = buffer.stream().filter(p -> p.equals(element)).collect(toList()).get(0);
-        buffer.removeFirstOccurrence(element);
-        return foundElement;
+    //is this right????
+    private Integer removeElement(Integer element) {
+        return buffer.removeFirstOccurrence(element) ? element : null;
     }
 
     public boolean contains(Object element) {
@@ -79,5 +79,9 @@ public class BoundedQueue {
 
     private void informProducerQueueHasSpaceAvailable() {
         bufferAccessLock.notifyAll();
+    }
+
+    public int getSize() {
+        return buffer.size();
     }
 }
