@@ -2,11 +2,11 @@ package com.bounded.queue;
 
 import java.util.LinkedList;
 
-public class BoundedQueue {
+public class BoundedQueue<T> {
 
     private int capacity;
     private int currentSizeOfBuffer;
-    private LinkedList<Integer> buffer;
+    private LinkedList<T> buffer;
     private final Object bufferAccessLock = new Object();
 
     public BoundedQueue(int capacity) {
@@ -14,7 +14,7 @@ public class BoundedQueue {
         this.buffer = new LinkedList<>();
     }
 
-    public void put(Integer element) throws InterruptedException {
+    public void put(T element) throws InterruptedException {
 
         synchronized (bufferAccessLock) {
 
@@ -41,7 +41,7 @@ public class BoundedQueue {
         bufferAccessLock.notifyAll();
     }
 
-    public Integer take(Integer element) throws InterruptedException {
+    public T take(T element) throws InterruptedException {
 
         synchronized (bufferAccessLock) {
 
@@ -49,7 +49,7 @@ public class BoundedQueue {
                 waitOnAvailableElement();
             }
 
-            Integer removedElement = null;
+            T removedElement = null;
             if(contains(element)) {
                 removedElement = removeElement(element);
             }
@@ -68,11 +68,11 @@ public class BoundedQueue {
         bufferAccessLock.wait();
     }
 
-    public boolean contains(Object element) {
+    public boolean contains(T element) {
         return buffer.contains(element) ? true : false;
     }
 
-    private Integer removeElement(Integer element) {
+    private T removeElement(T element) {
         return buffer.removeFirstOccurrence(element) ? element : null;
     }
 
