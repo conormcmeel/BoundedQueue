@@ -4,6 +4,7 @@ import com.bounded.queue.jobs.Integers.IntegerConsumer;
 import com.bounded.queue.jobs.Integers.IntegerProducer;
 import com.bounded.queue.jobs.Strings.StringConsumer;
 import com.bounded.queue.jobs.Strings.StringProducer;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -75,6 +76,7 @@ public class BoundedQueueTest {
         assertEquals(0, queue.getSize());
     }
 
+    @Ignore
     @Test
     public void stressTestOfIntegers() throws InterruptedException {
 
@@ -93,7 +95,7 @@ public class BoundedQueueTest {
             }
         }
 
-        Thread.sleep(5000);
+        Thread.sleep(60000);
 
         assertEquals(0, queue.getSize());
     }
@@ -162,6 +164,7 @@ public class BoundedQueueTest {
         assertEquals(0, queue.getSize());
     }
 
+    @Ignore
     @Test
     public void stressTestOfStrings() throws InterruptedException {
 
@@ -180,7 +183,7 @@ public class BoundedQueueTest {
             }
         }
 
-        Thread.sleep(5000);
+        Thread.sleep(60000);
 
         assertEquals(0, queue.getSize());
     }
