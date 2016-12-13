@@ -1,43 +1,30 @@
 package com.bounded.queue;
 
-import com.bounded.queue.jobs.Consumer;
-import com.bounded.queue.jobs.Producer;
-import org.junit.Before;
+import com.bounded.queue.jobs.Integers.IntegerConsumer;
+import com.bounded.queue.jobs.Integers.IntegerProducer;
+import com.bounded.queue.jobs.Strings.StringConsumer;
+import com.bounded.queue.jobs.Strings.StringProducer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class ThreadSafeBoundedQueueTest {
 
-    private BoundedQueue<Integer> queue;
-
-    @Before
-    public void setUp() {
-        queue = new BoundedQueue(10);
-    }
-
     @Test
     public void oneObjectShouldRemainUnconsumed() throws InterruptedException {
 
+        BoundedQueue<Integer> queue = new BoundedQueue(10);
         Object lockOne = new Object();
-        Runnable producer1 = new Producer(queue, "producer1", lockOne);
-        Runnable consumerOfOne1 = new Consumer(queue, "consumerOfOne1", lockOne, 1);
-        Runnable consumerOfOne2 = new Consumer(queue, "consumerOfOne2", lockOne, 2);
-        Runnable consumerOfOne3 = new Consumer(queue, "consumerOfOne3", lockOne, 3);
-        Runnable consumerOfOne4 = new Consumer(queue, "consumerOfOne4", lockOne, 4);
 
-
-        Thread t1 = new Thread(producer1);
-        Thread t2 = new Thread(consumerOfOne1);
-        Thread t3 = new Thread(consumerOfOne2);
-        Thread t4 = new Thread(consumerOfOne3);
-        Thread t5 = new Thread(consumerOfOne4);
-
+        Runnable producer = new IntegerProducer(queue, "producer", lockOne);
+        Thread t1 = new Thread(producer);
         t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
-        t5.start();
+
+        for(int i=1; i<=4; i++) {
+            Runnable consumer = new IntegerConsumer(queue, "consumer" + i, lockOne, i);
+            Thread t = new Thread(consumer);
+            t.start();
+        }
 
         Thread.sleep(1000); //let threads finish before checking size
 
@@ -45,32 +32,83 @@ public class ThreadSafeBoundedQueueTest {
     }
 
     @Test
-    public void queueShouldBeCleared() throws InterruptedException {
+    public void queueShouldBeClearedOfAllIntegers() throws InterruptedException {
 
+        BoundedQueue<Integer> queue = new BoundedQueue(10);
         Object lockOne = new Object();
-        Runnable producer1 = new Producer(queue, "producer1", lockOne);
-        Runnable consumerOfOne1 = new Consumer(queue, "consumerOfOne1", lockOne, 1);
-        Runnable consumerOfOne2 = new Consumer(queue, "consumerOfOne2", lockOne, 2);
-        Runnable consumerOfOne3 = new Consumer(queue, "consumerOfOne3", lockOne, 3);
-        Runnable consumerOfOne4 = new Consumer(queue, "consumerOfOne4", lockOne, 4);
-        Runnable consumerOfOne5 = new Consumer(queue, "consumerOfOne5", lockOne, 5);
 
-
-        Thread t1 = new Thread(producer1);
-        Thread t2 = new Thread(consumerOfOne1);
-        Thread t3 = new Thread(consumerOfOne2);
-        Thread t4 = new Thread(consumerOfOne3);
-        Thread t5 = new Thread(consumerOfOne4);
-        Thread t6 = new Thread(consumerOfOne5);
-
-        t2.setPriority(5);
-
+        Runnable producer = new IntegerProducer(queue, "producer", lockOne);
+        Thread t1 = new Thread(producer);
         t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
-        t5.start();
-        t6.start();
+
+        for(int i=1; i<=5; i++) {
+            Runnable consumer = new IntegerConsumer(queue, "consumer" + i, lockOne, i);
+            Thread t = new Thread(consumer);
+            t.start();
+        }
+
+        Thread.sleep(1000);
+
+        assertEquals(0, queue.getSize());
+    }
+
+    @Test
+    public void queueShouldBeClearedOfAllIntegersConsumersFirst() throws InterruptedException {
+
+        BoundedQueue<Integer> queue = new BoundedQueue(10);
+        Object lockOne = new Object();
+
+        for(int i=1; i<=5; i++) {
+            Runnable consumer = new IntegerConsumer(queue, "consumer" + i, lockOne, i);
+            Thread t = new Thread(consumer);
+            t.start();
+        }
+
+        Runnable producer = new IntegerProducer(queue, "producer", lockOne);
+        Thread t1 = new Thread(producer);
+        t1.start();
+
+        Thread.sleep(1000);
+
+        assertEquals(0, queue.getSize());
+    }
+
+    @Test
+    public void queueShouldBeClearedOfAllStrings() throws InterruptedException {
+
+        BoundedQueue<String> queue = new BoundedQueue(10);
+        Object lockOne = new Object();
+
+        Runnable producer = new StringProducer(queue, "producer", lockOne);
+        Thread t1 = new Thread(producer);
+        t1.start();
+
+        for(int i=1; i<=5; i++) {
+            Runnable consumer = new StringConsumer(queue, "consumer" + i, lockOne, "String" + i);
+            Thread t = new Thread(consumer);
+            t.start();
+        }
+
+        Thread.sleep(1000);
+
+        assertEquals(0, queue.getSize());
+    }
+
+    @Test
+    public void queueShouldBeClearedOfAllStringsConsumersFirst() throws InterruptedException {
+
+        BoundedQueue<String> queue = new BoundedQueue(10);
+        Object lockOne = new Object();
+
+        for(int i=1; i<=5; i++) {
+            Runnable consumer = new StringConsumer(queue, "consumer" + i, lockOne, "String" + i);
+            Thread t = new Thread(consumer);
+            t.start();
+        }
+
+        Runnable producer = new StringProducer(queue, "producer", lockOne);
+        Thread t1 = new Thread(producer);
+        t1.start();
 
         Thread.sleep(1000);
 

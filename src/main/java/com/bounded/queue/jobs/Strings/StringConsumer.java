@@ -1,17 +1,25 @@
-package com.bounded.queue.jobs;
+package com.bounded.queue.jobs.Strings;
 
 import com.bounded.queue.BoundedQueue;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Consumer implements Runnable {
+public class StringConsumer implements Runnable {
 
-    private final BoundedQueue sharedQueue;
+    private final BoundedQueue<String> sharedQueue;
     private final String name;
     private final Object lock;
-    private final Integer registeredObject;
-    private final static Logger logger = Logger.getLogger(Consumer.class.getName());
+    private final String registeredObject;
+    private final static Logger logger = Logger.getLogger(StringConsumer.class.getName());
+
+    //too many arguments
+    public StringConsumer(final BoundedQueue sharedQueue, final String name, final Object lock, final String registeredObject) {
+        this.sharedQueue = sharedQueue;
+        this.name = name;
+        this.lock = lock;
+        this.registeredObject = registeredObject;
+    }
 
     @Override
     public void run() {
@@ -34,13 +42,6 @@ public class Consumer implements Runnable {
                 lock.notifyAll();
             }
         }
-    }
-
-    public Consumer(final BoundedQueue sharedQueue, final String name, final Object lock, final Integer registeredObject) {
-        this.sharedQueue = sharedQueue;
-        this.name = name;
-        this.lock = lock;
-        this.registeredObject = registeredObject;
     }
 }
 
