@@ -6,12 +6,13 @@ import com.bounded.queue.jobs.Strings.StringConsumer;
 import com.bounded.queue.jobs.Strings.StringProducer;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class BoundedQueueTest {
 
     @Test
-    public void oneObjectShouldRemainUnconsumed() throws InterruptedException {
+    public void oneIntegerShouldRemainUnconsumed() throws InterruptedException {
 
         BoundedQueue<Integer> queue = new BoundedQueue(10);
         Object lockOne = new Object();
@@ -26,9 +27,10 @@ public class BoundedQueueTest {
             t.start();
         }
 
-        Thread.sleep(1000); //let threads finish before checking size
+        Thread.sleep(5000); //let threads finish before checking size
 
         assertEquals(1, queue.getSize());
+        assertTrue(queue.contains(5));
     }
 
     @Test
@@ -71,6 +73,28 @@ public class BoundedQueueTest {
         Thread.sleep(1000);
 
         assertEquals(0, queue.getSize());
+    }
+
+    @Test
+    public void oneStringShouldRemainUnconsumed() throws InterruptedException {
+
+        BoundedQueue<String> queue = new BoundedQueue(10);
+        Object lockOne = new Object();
+
+        Runnable producer = new StringProducer(queue, "producer", lockOne);
+        Thread t1 = new Thread(producer);
+        t1.start();
+
+        for(int i=1; i<=4; i++) {
+            Runnable consumer = new StringConsumer(queue, "consumer" + i, lockOne, "String" + i);
+            Thread t = new Thread(consumer);
+            t.start();
+        }
+
+        Thread.sleep(5000);
+
+        assertEquals(1, queue.getSize());
+        assertTrue(queue.contains("String5"));
     }
 
     @Test
