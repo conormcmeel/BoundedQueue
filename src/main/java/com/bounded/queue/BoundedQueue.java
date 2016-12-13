@@ -52,6 +52,7 @@ public class BoundedQueue<T> {
             T removedElement = null;
             if(contains(element)) {
                 removedElement = removeElement(element);
+                currentSizeOfBuffer--;
             }
 
             informProducerQueueHasSpaceAvailable();

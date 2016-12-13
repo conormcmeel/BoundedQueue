@@ -27,7 +27,7 @@ public class BoundedQueueTest {
             t.start();
         }
 
-        Thread.sleep(5000); //let threads finish before checking size
+        Thread.sleep(2000); //let threads finish before checking size
 
         assertEquals(1, queue.getSize());
         assertTrue(queue.contains(5));
@@ -49,7 +49,7 @@ public class BoundedQueueTest {
             t.start();
         }
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         assertEquals(0, queue.getSize());
     }
@@ -70,7 +70,30 @@ public class BoundedQueueTest {
         Thread t1 = new Thread(producer);
         t1.start();
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
+
+        assertEquals(0, queue.getSize());
+    }
+
+    @Test
+    public void stressTestOfIntegers() throws InterruptedException {
+
+        BoundedQueue<Integer> queue = new BoundedQueue(10);
+        Object lockOne = new Object();
+
+        for(int x=0; x<10; x++) {
+            Runnable producer = new IntegerProducer(queue, "producer", lockOne);
+            Thread t1 = new Thread(producer);
+            t1.start();
+
+            for(int i=1; i<=5; i++) {
+                Runnable consumer = new IntegerConsumer(queue, "consumer" + i, lockOne, i);
+                Thread t = new Thread(consumer);
+                t.start();
+            }
+        }
+
+        Thread.sleep(5000);
 
         assertEquals(0, queue.getSize());
     }
@@ -91,7 +114,7 @@ public class BoundedQueueTest {
             t.start();
         }
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         assertEquals(1, queue.getSize());
         assertTrue(queue.contains("String5"));
@@ -113,7 +136,7 @@ public class BoundedQueueTest {
             t.start();
         }
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         assertEquals(0, queue.getSize());
     }
@@ -134,7 +157,30 @@ public class BoundedQueueTest {
         Thread t1 = new Thread(producer);
         t1.start();
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
+
+        assertEquals(0, queue.getSize());
+    }
+
+    @Test
+    public void stressTestOfStrings() throws InterruptedException {
+
+        BoundedQueue<String> queue = new BoundedQueue(10);
+        Object lockOne = new Object();
+
+        for(int x=0; x<10; x++) {
+            Runnable producer = new StringProducer(queue, "producer", lockOne);
+            Thread t1 = new Thread(producer);
+            t1.start();
+
+            for(int i=1; i<=5; i++) {
+                Runnable consumer = new StringConsumer(queue, "consumer" + i, lockOne, "String" + i);
+                Thread t = new Thread(consumer);
+                t.start();
+            }
+        }
+
+        Thread.sleep(5000);
 
         assertEquals(0, queue.getSize());
     }
