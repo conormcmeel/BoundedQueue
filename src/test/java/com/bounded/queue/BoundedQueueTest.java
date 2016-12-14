@@ -12,26 +12,26 @@ import static org.junit.Assert.assertTrue;
 
 public class BoundedQueueTest {
 
-//    @Test
-//    public void oneIntegerShouldRemainUnconsumeds() throws InterruptedException {
-//
-//        BoundedQueue<Integer> queue = new BoundedQueue(10);
-//
-//        for(int i=1; i<=2; i++) {
-//            IntegerConsumer consumer = new IntegerConsumer(queue, "consumer" + i, 1);
-//            Thread t = new Thread(consumer);
-//            t.start();
-//        }
-//
-//        Runnable producer = new IntegerProducer(queue, "producer");
-//        Thread t1 = new Thread(producer);
-//        t1.start();
-//
-//        Thread.sleep(2000); //let threads finish before checking size
-//
-//        assertEquals(1, queue.getSize());
-//        assertTrue(queue.contains(1));
-//    }
+    @Test
+    public void consumer1ShouldGetTheObject() throws InterruptedException {
+
+        BoundedQueue<Integer> queue = new BoundedQueue(10);
+
+        for(int i=1; i<=2; i++) {
+            IntegerConsumer consumer = new IntegerConsumer(queue, "consumer" + i, 1);
+            Thread t = new Thread(consumer);
+            t.start();
+        }
+
+        Runnable producer = new IntegerProducer(queue, "producer");
+        Thread t1 = new Thread(producer);
+        t1.start();
+
+        Thread.sleep(2000); //let threads finish before checking size
+
+        assertEquals(1, queue.getSize());
+        assertTrue(queue.contains(1));
+    }
 
     @Test
     public void oneIntegerShouldRemainUnconsumed() throws InterruptedException {
@@ -179,7 +179,7 @@ public class BoundedQueueTest {
         assertEquals(0, queue.getSize());
     }
 
-//    @Ignore
+    @Ignore
     @Test
     public void stressTestOfStrings() throws InterruptedException {
 
