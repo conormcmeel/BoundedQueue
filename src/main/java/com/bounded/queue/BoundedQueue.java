@@ -22,7 +22,7 @@ public class BoundedQueue<T> {
     public BoundedQueue(int capacity) {
         this.capacity = capacity;
         this.buffer = new LinkedList<>();
-        registeredConsumers = Collections.synchronizedList(new ArrayList<>());
+        this.registeredConsumers = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void put(T element) throws InterruptedException {
@@ -43,14 +43,9 @@ public class BoundedQueue<T> {
                 registeredConsumer.consumerNotified = true;
                 registeredConsumers.remove(consumer);
             }
+
             informConsumerQueueHasElement();
         }
-    }
-
-    private Optional<RegisteredConsumer> findRegisteredConsumer(T element) {
-        return registeredConsumers.stream()
-                .filter(c -> c.desiredElement.equals(element))
-                .findFirst();
     }
 
     private boolean isBufferFull() {
@@ -61,12 +56,20 @@ public class BoundedQueue<T> {
         bufferAccessLock.wait();
     }
 
+    private Optional<RegisteredConsumer> findRegisteredConsumer(T element) {
+        return registeredConsumers.stream()
+                .filter(c -> c.desiredElement.equals(element))
+                .findFirst();
+    }
+
     private void informConsumerQueueHasElement() {
         bufferAccessLock.notifyAll();
     }
 
     public T take(T element) throws InterruptedException {
+
         synchronized (bufferAccessLock) {
+
             if (contains(element) && !findRegisteredConsumer(element).isPresent()) {
                 bufferAccessLock.notifyAll();
                 return takeInternal(element);
@@ -75,11 +78,15 @@ public class BoundedQueue<T> {
             RegisteredConsumer registeredConsumer = new RegisteredConsumer(element);
             registeredConsumers.add(registeredConsumer);
 
-            while (!registeredConsumer.consumerNotified && !contains(element)) {
+            while (!registeredConsumer.consumerNotified || !contains(element)) {
+                System.out.println("waity" + Thread.currentThread());
                 waitOnAvailableElement();
             }
 
-            bufferAccessLock.notifyAll();
+            System.out.println("Imma taking " + element + ", says " + Thread.currentThread() + " I was allowed " + registeredConsumer.consumerNotified);
+
+            informProducerQueueHasSpaceAvailable();
+
             return takeInternal(element);
         }
     }

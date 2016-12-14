@@ -8,6 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class BoundedQueueTest {
@@ -29,8 +30,8 @@ public class BoundedQueueTest {
 
         Thread.sleep(2000); //let threads finish before checking size
 
-        assertEquals(1, queue.getSize());
-        assertTrue(queue.contains(1));
+        assertEquals(4, queue.getSize());
+        assertFalse(queue.contains(1));
     }
 
     @Test
