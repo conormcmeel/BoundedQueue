@@ -4,36 +4,30 @@ import com.bounded.queue.jobs.Integers.IntegerConsumer;
 import com.bounded.queue.jobs.Integers.IntegerProducer;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class BoundedQueueTest {
 
     @Test
-    public void oneIntegerShouldRemainUnconsumed() throws InterruptedException {
+    public void oneIntegerShouldRemainUnconsumeds() throws InterruptedException {
 
-
-        Object lock = new Object();
         BoundedQueue<Integer> queue = new BoundedQueue(10);
-        Map<Object, Queue> register = new HashMap<>();
 
         for(int i=1; i<=2; i++) {
-            IntegerConsumer consumer = new IntegerConsumer(queue, "consumer" + i, register, 1);
+            IntegerConsumer consumer = new IntegerConsumer(queue, "consumer" + i, 1);
             Thread t = new Thread(consumer);
             t.start();
         }
 
-        Runnable producer = new IntegerProducer(queue, "producer", register);
+        Runnable producer = new IntegerProducer(queue, "producer");
         Thread t1 = new Thread(producer);
         t1.start();
 
         Thread.sleep(2000); //let threads finish before checking size
 
-        assertEquals(0, queue.getSize());
-      //  assertTrue(queue.contains(5));
+        assertEquals(1, queue.getSize());
+        assertTrue(queue.contains(1));
     }
 
 //    @Test
@@ -65,14 +59,13 @@ public class BoundedQueueTest {
 //    public void oneIntegerShouldRemainUnconsumed() throws InterruptedException {
 //
 //        BoundedQueue<Integer> queue = new BoundedQueue(10);
-//        Object lockOne = new Object();
 //
-//        Runnable producer = new IntegerProducer(queue, "producer", lockOne);
+//        Runnable producer = new IntegerProducer(queue, "producer");
 //        Thread t1 = new Thread(producer);
 //        t1.start();
 //
 //        for(int i=1; i<=4; i++) {
-//            Runnable consumer = new IntegerConsumer(queue, "consumer" + i, lockOne, i);
+//            Runnable consumer = new IntegerConsumer(queue, "consumer" + i, i);
 //            Thread t = new Thread(consumer);
 //            t.start();
 //        }
