@@ -9,36 +9,29 @@ public class StringConsumer implements Runnable {
 
     private final BoundedQueue<String> sharedQueue;
     private final String name;
-    private final Object lock;
     private final String registeredObject;
     private final static Logger logger = Logger.getLogger(StringConsumer.class.getName());
 
-    public StringConsumer(final BoundedQueue sharedQueue, final String name, final Object lock, final String registeredObject) {
+    public StringConsumer(final BoundedQueue sharedQueue, final String name, final String registeredObject) {
         this.sharedQueue = sharedQueue;
         this.name = name;
-        this.lock = lock;
         this.registeredObject = registeredObject;
     }
 
     @Override
     public void run() {
 
-        synchronized (lock) {
+        try {
+            System.out.println(name + " consumed: " + sharedQueue.take(registeredObject));
 
-            try {
-
-                while (!sharedQueue.contains(registeredObject)) {
-                    System.out.println(name + " waiting on " + registeredObject);
-                    lock.wait();
-                }
-
-                System.out.println(name + " consumed: " + sharedQueue.take(registeredObject));
-
-            } catch (InterruptedException ex) {
-                logger.log(Level.SEVERE, name + "interrupted", ex);
-                Thread.currentThread().interrupt();
-            }
+        } catch (InterruptedException ex) {
+            logException(ex);
         }
+    }
+
+    private void logException(InterruptedException ex) {
+        logger.log(Level.SEVERE, name + "interrupted", ex);
+        Thread.currentThread().interrupt();
     }
 }
 
