@@ -26,6 +26,20 @@ public class BoundedQueue<T> {
             currentSizeOfBuffer++;
 
             informConsumerQueueHasElement();
+
+//            for(int i=0; i< consumers.length; i++) {
+//                synchronized (consumers[i]) {
+//
+//                    try {
+//                        //Thread.sleep(500);
+//                    } catch (Exception ex) {
+//                        System.out.println(ex);
+//                    }
+//
+//                    System.out.println("notifying" + consumers[i].name);
+//                    consumers[i].notify();
+//                }
+//            }
         }
     }
 

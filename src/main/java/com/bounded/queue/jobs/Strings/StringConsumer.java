@@ -28,7 +28,7 @@ public class StringConsumer implements Runnable {
             try {
 
                 while (!sharedQueue.contains(registeredObject)) {
-                    System.out.println("waiting on " + registeredObject);
+                    System.out.println(name + " waiting on " + registeredObject);
                     lock.wait();
                 }
 
