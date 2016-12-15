@@ -4,17 +4,17 @@ import java.util.*;
 
 public class BoundedQueue<T> {
 
-    private int capacity;
+    private final int capacity;
     private int currentSizeOfBuffer;
-    private LinkedList<T> buffer;
+    private final LinkedList<T> buffer;
     private final Object bufferAccessLock = new Object();
-    private List<RegisteredConsumer> registeredConsumers;
+    private final List<RegisteredConsumer> registeredConsumers;
 
-    private static class RegisteredConsumer {
+    private static class RegisteredConsumer<T> {
         volatile boolean consumerNotified = false;
-        final Object desiredElement;
+        final T desiredElement;
 
-        private RegisteredConsumer(Object desiredElement) {
+        private RegisteredConsumer(T desiredElement) {
             this.desiredElement = desiredElement;
         }
     }
@@ -22,7 +22,7 @@ public class BoundedQueue<T> {
     public BoundedQueue(int capacity) {
         this.capacity = capacity;
         this.buffer = new LinkedList<>();
-        this.registeredConsumers = Collections.synchronizedList(new ArrayList<>());
+        this.registeredConsumers = new ArrayList<>();
     }
 
     public void put(T element) throws InterruptedException {
@@ -92,26 +92,20 @@ public class BoundedQueue<T> {
     }
 
     private T takeInternal(T element) {
-        T removedElement;
-        removedElement = removeElement(element);
         currentSizeOfBuffer--;
-        return removedElement;
+        return removeElement(element);
     }
 
-    private boolean isBufferEmpty() {
-        return 0 == currentSizeOfBuffer;
-    }
-
-    private void waitOnAvailableElement() throws InterruptedException {
-        bufferAccessLock.wait();
+    private T removeElement(T element) {
+        return buffer.removeFirstOccurrence(element) ? element : null;
     }
 
     public boolean contains(T element) {
         return buffer.contains(element) ? true : false;
     }
 
-    private T removeElement(T element) {
-        return buffer.removeFirstOccurrence(element) ? element : null;
+    private void waitOnAvailableElement() throws InterruptedException {
+        bufferAccessLock.wait();
     }
 
     private void informProducerQueueHasSpaceAvailable() {

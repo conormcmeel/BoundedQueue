@@ -1,18 +1,18 @@
-package com.bounded.queue.jobs.Strings;
+package com.bounded.queue.jobs;
 
 import com.bounded.queue.BoundedQueue;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class StringConsumer implements Runnable {
+public class Consumer<T> implements Runnable {
 
-    private final BoundedQueue<String> sharedQueue;
+    private final BoundedQueue<T> sharedQueue;
     private final String name;
-    private final String registeredObject;
-    private final static Logger logger = Logger.getLogger(StringConsumer.class.getName());
+    private final T registeredObject;
+    private final static Logger logger = Logger.getLogger(Consumer.class.getName());
 
-    public StringConsumer(final BoundedQueue sharedQueue, final String name, final String registeredObject) {
+    public Consumer(final BoundedQueue sharedQueue, final String name, T registeredObject) {
         this.sharedQueue = sharedQueue;
         this.name = name;
         this.registeredObject = registeredObject;

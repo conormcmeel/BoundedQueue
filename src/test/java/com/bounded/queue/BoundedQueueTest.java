@@ -1,15 +1,12 @@
 package com.bounded.queue;
 
-import com.bounded.queue.jobs.Integers.IntegerConsumer;
+import com.bounded.queue.jobs.Consumer;
 import com.bounded.queue.jobs.Integers.IntegerProducer;
-import com.bounded.queue.jobs.Strings.StringConsumer;
 import com.bounded.queue.jobs.Strings.StringProducer;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class BoundedQueueTest {
 
@@ -19,7 +16,7 @@ public class BoundedQueueTest {
         BoundedQueue<Integer> queue = new BoundedQueue(10);
 
         for(int i=1; i<=2; i++) {
-            IntegerConsumer consumer = new IntegerConsumer(queue, "consumer" + i, 1);
+            Consumer consumer = new Consumer(queue, "consumer" + i, 1);
             Thread t = new Thread(consumer);
             t.start();
         }
@@ -44,7 +41,7 @@ public class BoundedQueueTest {
         t1.start();
 
         for(int i=1; i<=4; i++) {
-            Runnable consumer = new IntegerConsumer(queue, "consumer" + i, i);
+            Runnable consumer = new Consumer(queue, "consumer" + i, i);
             Thread t = new Thread(consumer);
             t.start();
         }
@@ -65,7 +62,7 @@ public class BoundedQueueTest {
         t1.start();
 
         for(int i=1; i<=5; i++) {
-            Runnable consumer = new IntegerConsumer(queue, "consumer" + i, i);
+            Runnable consumer = new Consumer(queue, "consumer" + i, i);
             Thread t = new Thread(consumer);
             t.start();
         }
@@ -81,7 +78,7 @@ public class BoundedQueueTest {
         BoundedQueue<Integer> queue = new BoundedQueue(10);
 
         for(int i=1; i<=5; i++) {
-            Runnable consumer = new IntegerConsumer(queue, "consumer" + i, i);
+            Runnable consumer = new Consumer(queue, "consumer" + i, i);
             Thread t = new Thread(consumer);
             t.start();
         }
@@ -108,7 +105,7 @@ public class BoundedQueueTest {
             t1.start();
 
             for(int i=1; i<=5; i++) {
-                Runnable consumer = new IntegerConsumer(queue, "consumer" + i, i);
+                Runnable consumer = new Consumer(queue, "consumer" + i, i);
                 Thread t = new Thread(consumer);
                 t.start();
             }
@@ -129,7 +126,7 @@ public class BoundedQueueTest {
         t1.start();
 
         for(int i=1; i<=4; i++) {
-            Runnable consumer = new StringConsumer(queue, "consumer" + i, "String" + i);
+            Runnable consumer = new Consumer(queue, "consumer" + i, "String" + i);
             Thread t = new Thread(consumer);
             t.start();
         }
@@ -150,7 +147,7 @@ public class BoundedQueueTest {
         t1.start();
 
         for(int i=1; i<=5; i++) {
-            Runnable consumer = new StringConsumer(queue, "consumer" + i, "String" + i);
+            Runnable consumer = new Consumer(queue, "consumer" + i, "String" + i);
             Thread t = new Thread(consumer);
             t.start();
         }
@@ -166,7 +163,7 @@ public class BoundedQueueTest {
         BoundedQueue<String> queue = new BoundedQueue(10);
 
         for(int i=1; i<=5; i++) {
-            Runnable consumer = new StringConsumer(queue, "consumer" + i, "String" + i);
+            Runnable consumer = new Consumer(queue, "consumer" + i, "String" + i);
             Thread t = new Thread(consumer);
             t.start();
         }
@@ -192,7 +189,7 @@ public class BoundedQueueTest {
             t1.start();
 
             for(int i=1; i<=5; i++) {
-                Runnable consumer = new StringConsumer(queue, "consumer" + i, "String" + i);
+                Runnable consumer = new Consumer(queue, "consumer" + i, "String" + i);
                 Thread t = new Thread(consumer);
                 t.start();
             }
