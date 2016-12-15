@@ -44,6 +44,8 @@ public class BoundedQueue<T> {
                 registeredConsumers.remove(consumer);
             }
 
+            System.out.println(Thread.currentThread().getName() + " produced " + element);
+
             informConsumerQueueHasElement();
         }
     }
@@ -79,11 +81,11 @@ public class BoundedQueue<T> {
             registeredConsumers.add(registeredConsumer);
 
             while (!registeredConsumer.consumerNotified || !contains(element)) {
-                System.out.println("waity" + Thread.currentThread());
+                System.out.println(Thread.currentThread().getName() + " waiting on " + element);
                 waitOnAvailableElement();
             }
 
-            System.out.println("Imma taking " + element + ", says " + Thread.currentThread() + " I was allowed " + registeredConsumer.consumerNotified);
+            System.out.println(Thread.currentThread().getName() + " consumed " + element);
 
             informProducerQueueHasSpaceAvailable();
 

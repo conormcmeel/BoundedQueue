@@ -8,13 +8,11 @@ import java.util.logging.Logger;
 public class Consumer<T> implements Runnable {
 
     private final BoundedQueue<T> sharedQueue;
-    private final String name;
     private final T registeredObject;
     private final static Logger logger = Logger.getLogger(Consumer.class.getName());
 
-    public Consumer(final BoundedQueue sharedQueue, final String name, T registeredObject) {
+    public Consumer(final BoundedQueue sharedQueue, T registeredObject) {
         this.sharedQueue = sharedQueue;
-        this.name = name;
         this.registeredObject = registeredObject;
     }
 
@@ -22,7 +20,7 @@ public class Consumer<T> implements Runnable {
     public void run() {
 
         try {
-            System.out.println(name + " consumed: " + sharedQueue.take(registeredObject));
+            sharedQueue.take(registeredObject);
 
         } catch (InterruptedException ex) {
             logException(ex);
@@ -30,7 +28,7 @@ public class Consumer<T> implements Runnable {
     }
 
     private void logException(InterruptedException ex) {
-        logger.log(Level.SEVERE, name + "interrupted", ex);
+        logger.log(Level.SEVERE, Thread.currentThread().getName() + "interrupted", ex);
         Thread.currentThread().interrupt();
     }
 }

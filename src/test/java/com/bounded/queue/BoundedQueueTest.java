@@ -16,20 +16,23 @@ public class BoundedQueueTest {
     public void consumer1ShouldGetTheObject() throws InterruptedException {
 
         BoundedQueue<Integer> queue = new BoundedQueue(10);
+        number_of_objects = 1;
 
         for(int i=1; i<=2; i++) {
-            Consumer consumer = new Consumer(queue, "consumer" + i, 1);
+            Consumer consumer = new Consumer(queue, 1);
             Thread t = new Thread(consumer);
+            t.setName("Consumer" + i);
             t.start();
         }
 
-        Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
+        Runnable producer = new IntegerProducer(queue, number_of_objects);
         Thread t1 = new Thread(producer);
+        t1.setName("Producer");
         t1.start();
 
         Thread.sleep(2000); //let threads finish before checking size
 
-        assertEquals(4, queue.getSize());
+        assertEquals(0, queue.getSize());
         assertFalse(queue.contains(1));
     }
 
@@ -38,13 +41,15 @@ public class BoundedQueueTest {
 
         BoundedQueue<Integer> queue = new BoundedQueue(10);
 
-        Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
+        Runnable producer = new IntegerProducer(queue, number_of_objects);
         Thread t1 = new Thread(producer);
+        t1.setName("Producer");
         t1.start();
 
         for(int i=1; i<=4; i++) {
-            Runnable consumer = new Consumer(queue, "consumer" + i, i);
+            Runnable consumer = new Consumer(queue, i);
             Thread t = new Thread(consumer);
+            t.setName("Consumer" + i);
             t.start();
         }
 
@@ -59,13 +64,15 @@ public class BoundedQueueTest {
 
         BoundedQueue<Integer> queue = new BoundedQueue(10);
 
-        Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
+        Runnable producer = new IntegerProducer(queue, number_of_objects);
         Thread t1 = new Thread(producer);
+        t1.setName("Producer");
         t1.start();
 
         for(int i=1; i<=5; i++) {
-            Runnable consumer = new Consumer(queue, "consumer" + i, i);
+            Runnable consumer = new Consumer(queue, i);
             Thread t = new Thread(consumer);
+            t.setName("Consumer" + i);
             t.start();
         }
 
@@ -80,13 +87,15 @@ public class BoundedQueueTest {
         BoundedQueue<Integer> queue = new BoundedQueue(10);
 
         for(int i=1; i<=5; i++) {
-            Runnable consumer = new Consumer(queue, "consumer" + i, i);
+            Runnable consumer = new Consumer(queue, i);
             Thread t = new Thread(consumer);
+            t.setName("Consumer" + i);
             t.start();
         }
 
-        Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
+        Runnable producer = new IntegerProducer(queue, number_of_objects);
         Thread t1 = new Thread(producer);
+        t1.setName("Producer");
         t1.start();
 
         Thread.sleep(2000);
@@ -99,16 +108,17 @@ public class BoundedQueueTest {
     public void stressTestOfIntegers() throws InterruptedException {
 
         BoundedQueue<Integer> queue = new BoundedQueue(10);
-        Object lock = new Object();
 
         for(int x=0; x<10; x++) {
-            Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
+            Runnable producer = new IntegerProducer(queue, number_of_objects);
             Thread t1 = new Thread(producer);
+            t1.setName("Producer");
             t1.start();
 
             for(int i=1; i<=5; i++) {
-                Runnable consumer = new Consumer(queue, "consumer" + i, i);
+                Runnable consumer = new Consumer(queue, i);
                 Thread t = new Thread(consumer);
+                t.setName("Consumer" + i);
                 t.start();
             }
         }
@@ -123,13 +133,15 @@ public class BoundedQueueTest {
 
         BoundedQueue<String> queue = new BoundedQueue(10);
 
-        Runnable producer = new StringProducer(queue, "producer", number_of_objects);
+        Runnable producer = new StringProducer(queue, number_of_objects);
         Thread t1 = new Thread(producer);
+        t1.setName("Producer");
         t1.start();
 
         for(int i=1; i<=4; i++) {
-            Runnable consumer = new Consumer(queue, "consumer" + i, "String" + i);
+            Runnable consumer = new Consumer(queue, "String" + i);
             Thread t = new Thread(consumer);
+            t.setName("Consumer" + i);
             t.start();
         }
 
@@ -144,13 +156,15 @@ public class BoundedQueueTest {
 
         BoundedQueue<String> queue = new BoundedQueue(10);
 
-        Runnable producer = new StringProducer(queue, "producer", number_of_objects);
+        Runnable producer = new StringProducer(queue, number_of_objects);
         Thread t1 = new Thread(producer);
+        t1.setName("Producer");
         t1.start();
 
         for(int i=1; i<=5; i++) {
-            Runnable consumer = new Consumer(queue, "consumer" + i, "String" + i);
+            Runnable consumer = new Consumer(queue, "String" + i);
             Thread t = new Thread(consumer);
+            t.setName("Consumer" + i);
             t.start();
         }
 
@@ -165,13 +179,15 @@ public class BoundedQueueTest {
         BoundedQueue<String> queue = new BoundedQueue(10);
 
         for(int i=1; i<=5; i++) {
-            Runnable consumer = new Consumer(queue, "consumer" + i, "String" + i);
+            Runnable consumer = new Consumer(queue, "String" + i);
             Thread t = new Thread(consumer);
+            t.setName("Consumer" + i);
             t.start();
         }
 
-        Runnable producer = new StringProducer(queue, "producer", number_of_objects);
+        Runnable producer = new StringProducer(queue, number_of_objects);
         Thread t1 = new Thread(producer);
+        t1.setName("Producer");
         t1.start();
 
         Thread.sleep(2000);
@@ -186,13 +202,15 @@ public class BoundedQueueTest {
         BoundedQueue<String> queue = new BoundedQueue(10);
 
         for(int x=0; x<10; x++) {
-            Runnable producer = new StringProducer(queue, "producer", number_of_objects);
+            Runnable producer = new StringProducer(queue, number_of_objects);
             Thread t1 = new Thread(producer);
+            t1.setName("Producer");
             t1.start();
 
             for(int i=1; i<=5; i++) {
-                Runnable consumer = new Consumer(queue, "consumer" + i, "String" + i);
+                Runnable consumer = new Consumer(queue, "String" + i);
                 Thread t = new Thread(consumer);
+                t.setName("Consumer" + i);
                 t.start();
             }
         }
