@@ -1,25 +1,27 @@
 package com.bounded.queue.jobs.Strings;
 
 import com.bounded.queue.BoundedQueue;
+import com.bounded.queue.jobs.Producer;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-public class StringProducer implements Runnable {
+public class StringProducer extends Producer implements Runnable {
 
     private final BoundedQueue<String> sharedQueue;
     private final String name;
-    private final static Logger logger = Logger.getLogger(StringProducer.class.getName());
+    private final int number_of_objects;
 
-    public StringProducer(final BoundedQueue sharedQueue, final String name) {
+    public StringProducer(final BoundedQueue sharedQueue, final String name, final int numberOfObjects) {
+
+        super(name);
+
         this.sharedQueue = sharedQueue;
         this.name = name;
+        this.number_of_objects = numberOfObjects;
     }
 
     @Override
     public void run() {
 
-        for(int i=1; i<=5; i++){
+        for(int i=1; i<=number_of_objects; i++){
 
             try {
 
@@ -31,10 +33,5 @@ public class StringProducer implements Runnable {
                 logException(ex);
             }
         }
-    }
-
-    private void logException(InterruptedException ex) {
-        logger.log(Level.SEVERE, name + "interrupted", ex);
-        Thread.currentThread().interrupt();
     }
 }

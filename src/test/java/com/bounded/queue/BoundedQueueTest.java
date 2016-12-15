@@ -10,6 +10,8 @@ import static org.junit.Assert.*;
 
 public class BoundedQueueTest {
 
+    private int number_of_objects = 5;
+
     @Test
     public void consumer1ShouldGetTheObject() throws InterruptedException {
 
@@ -21,7 +23,7 @@ public class BoundedQueueTest {
             t.start();
         }
 
-        Runnable producer = new IntegerProducer(queue, "producer");
+        Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
         Thread t1 = new Thread(producer);
         t1.start();
 
@@ -36,7 +38,7 @@ public class BoundedQueueTest {
 
         BoundedQueue<Integer> queue = new BoundedQueue(10);
 
-        Runnable producer = new IntegerProducer(queue, "producer");
+        Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
         Thread t1 = new Thread(producer);
         t1.start();
 
@@ -57,7 +59,7 @@ public class BoundedQueueTest {
 
         BoundedQueue<Integer> queue = new BoundedQueue(10);
 
-        Runnable producer = new IntegerProducer(queue, "producer");
+        Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
         Thread t1 = new Thread(producer);
         t1.start();
 
@@ -83,7 +85,7 @@ public class BoundedQueueTest {
             t.start();
         }
 
-        Runnable producer = new IntegerProducer(queue, "producer");
+        Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
         Thread t1 = new Thread(producer);
         t1.start();
 
@@ -100,7 +102,7 @@ public class BoundedQueueTest {
         Object lock = new Object();
 
         for(int x=0; x<10; x++) {
-            Runnable producer = new IntegerProducer(queue, "producer");
+            Runnable producer = new IntegerProducer(queue, "producer", number_of_objects);
             Thread t1 = new Thread(producer);
             t1.start();
 
@@ -121,7 +123,7 @@ public class BoundedQueueTest {
 
         BoundedQueue<String> queue = new BoundedQueue(10);
 
-        Runnable producer = new StringProducer(queue, "producer");
+        Runnable producer = new StringProducer(queue, "producer", number_of_objects);
         Thread t1 = new Thread(producer);
         t1.start();
 
@@ -142,7 +144,7 @@ public class BoundedQueueTest {
 
         BoundedQueue<String> queue = new BoundedQueue(10);
 
-        Runnable producer = new StringProducer(queue, "producer");
+        Runnable producer = new StringProducer(queue, "producer", number_of_objects);
         Thread t1 = new Thread(producer);
         t1.start();
 
@@ -168,7 +170,7 @@ public class BoundedQueueTest {
             t.start();
         }
 
-        Runnable producer = new StringProducer(queue, "producer");
+        Runnable producer = new StringProducer(queue, "producer", number_of_objects);
         Thread t1 = new Thread(producer);
         t1.start();
 
@@ -184,7 +186,7 @@ public class BoundedQueueTest {
         BoundedQueue<String> queue = new BoundedQueue(10);
 
         for(int x=0; x<10; x++) {
-            Runnable producer = new StringProducer(queue, "producer");
+            Runnable producer = new StringProducer(queue, "producer", number_of_objects);
             Thread t1 = new Thread(producer);
             t1.start();
 
