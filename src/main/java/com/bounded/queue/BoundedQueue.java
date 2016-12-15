@@ -1,6 +1,7 @@
 package com.bounded.queue;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class BoundedQueue<T> {
 
@@ -9,6 +10,7 @@ public class BoundedQueue<T> {
     private final LinkedList<T> buffer;
     private final Object bufferAccessLock = new Object();
     private final List<RegisteredConsumer> registeredConsumers;
+    private final static Logger logger = Logger.getLogger(BoundedQueue.class.getName());
 
     private static class RegisteredConsumer<T> {
         volatile boolean consumerNotified = false;
@@ -44,7 +46,7 @@ public class BoundedQueue<T> {
                 registeredConsumers.remove(consumer);
             }
 
-            System.out.println(Thread.currentThread().getName() + " produced " + element);
+            logger.info(Thread.currentThread().getName() + " produced " + element);
 
             informConsumerQueueHasElement();
         }
@@ -81,11 +83,11 @@ public class BoundedQueue<T> {
             registeredConsumers.add(registeredConsumer);
 
             while (!registeredConsumer.consumerNotified || !contains(element)) {
-                System.out.println(Thread.currentThread().getName() + " waiting on " + element);
+                logger.info(Thread.currentThread().getName() + " waiting on " + element);
                 waitOnAvailableElement();
             }
 
-            System.out.println(Thread.currentThread().getName() + " consumed " + element);
+            logger.info(Thread.currentThread().getName() + " consumed " + element);
 
             informProducerQueueHasSpaceAvailable();
 

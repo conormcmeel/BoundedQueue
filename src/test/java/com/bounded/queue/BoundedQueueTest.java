@@ -13,30 +13,6 @@ public class BoundedQueueTest {
     private int number_of_objects = 5;
 
     @Test
-    public void consumer1ShouldGetTheObject() throws InterruptedException {
-
-        BoundedQueue<Integer> queue = new BoundedQueue(10);
-        number_of_objects = 1;
-
-        for(int i=1; i<=2; i++) {
-            Consumer consumer = new Consumer(queue, 1);
-            Thread t = new Thread(consumer);
-            t.setName("Consumer" + i);
-            t.start();
-        }
-
-        Runnable producer = new IntegerProducer(queue, number_of_objects);
-        Thread t1 = new Thread(producer);
-        t1.setName("Producer");
-        t1.start();
-
-        Thread.sleep(2000); //let threads finish before checking size
-
-        assertEquals(0, queue.getSize());
-        assertFalse(queue.contains(1));
-    }
-
-    @Test
     public void oneIntegerShouldRemainUnconsumed() throws InterruptedException {
 
         BoundedQueue<Integer> queue = new BoundedQueue(10);
@@ -101,6 +77,30 @@ public class BoundedQueueTest {
         Thread.sleep(2000);
 
         assertEquals(0, queue.getSize());
+    }
+
+    @Test
+    public void consumer1ShouldGetTheObject() throws InterruptedException {
+
+        BoundedQueue<Integer> queue = new BoundedQueue(10);
+        number_of_objects = 1;
+
+        for(int i=1; i<=2; i++) {
+            Consumer consumer = new Consumer(queue, 1);
+            Thread t = new Thread(consumer);
+            t.setName("Consumer" + i);
+            t.start();
+        }
+
+        Runnable producer = new IntegerProducer(queue, number_of_objects);
+        Thread t1 = new Thread(producer);
+        t1.setName("Producer");
+        t1.start();
+
+        Thread.sleep(2000); //let threads finish before checking size
+
+        assertEquals(0, queue.getSize());
+        assertFalse(queue.contains(1));
     }
 
     @Ignore
