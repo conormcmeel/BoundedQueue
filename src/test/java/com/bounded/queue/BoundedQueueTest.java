@@ -79,7 +79,7 @@ public class BoundedQueueTest {
         assertEquals(0, queue.getSize());
     }
 
-    @Test
+    @Test  //unfortunately, one must check the console output for this test.. not a good test :(
     public void consumer1ShouldGetTheObject() throws InterruptedException {
 
         BoundedQueue<Integer> queue = new BoundedQueue(10);
