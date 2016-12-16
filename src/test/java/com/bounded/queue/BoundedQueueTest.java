@@ -97,7 +97,7 @@ public class BoundedQueueTest {
         t1.setName("Producer");
         t1.start();
 
-        Thread.sleep(2000); //let threads finish before checking size
+        Thread.sleep(2000);
 
         assertEquals(0, queue.getSize());
         assertFalse(queue.contains(1));

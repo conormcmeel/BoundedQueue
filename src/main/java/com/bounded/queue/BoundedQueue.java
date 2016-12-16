@@ -1,7 +1,9 @@
 package com.bounded.queue;
 
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 public class BoundedQueue<T> {
 
@@ -10,7 +12,6 @@ public class BoundedQueue<T> {
     private final LinkedList<T> buffer;
     private final Object bufferAccessLock = new Object();
     private final List<RegisteredConsumer> registeredConsumers;
-    private final static Logger logger = Logger.getLogger(BoundedQueue.class.getName());
 
     private static class RegisteredConsumer<T> {
         volatile boolean consumerNotified = false;
