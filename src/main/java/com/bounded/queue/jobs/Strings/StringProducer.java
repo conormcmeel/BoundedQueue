@@ -19,7 +19,7 @@ public class StringProducer extends Producer implements Runnable {
         for(int i=1; i<=number_of_objects; i++){
 
             try {
-                String value = "String" + i;
+                String value = "conorString" + i;
                 sharedQueue.put(value);
 
             } catch (InterruptedException ex) {
