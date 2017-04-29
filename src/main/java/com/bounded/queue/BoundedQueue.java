@@ -75,6 +75,7 @@ public class BoundedQueue<T> {
 
         synchronized (bufferAccessLock) {
 
+            //without this, a consumer could wait forever if the producer already produced and notified before the consumer was waiting
             if (contains(element) && !findRegisteredConsumer(element).isPresent()) {
                 bufferAccessLock.notifyAll();
                 return takeInternal(element);
@@ -83,7 +84,7 @@ public class BoundedQueue<T> {
             RegisteredConsumer registeredConsumer = new RegisteredConsumer(element);
             registeredConsumers.add(registeredConsumer);
 
-            while (!registeredConsumer.consumerNotified || !contains(element)) {
+            while (!registeredConsumer.consumerNotified || !contains(element)) {    // makes sense to wait if no element
                 System.out.println(Thread.currentThread().getName() + " waiting on " + element);
                 waitOnAvailableElement();
             }
