@@ -1,4 +1,4 @@
-I ran out of time so here are come considerations.
+I ran out of time so here are come considerations:
 
 Issues:
 1.	Would have preferred to 'generify' the Producers, passing any type of object.
