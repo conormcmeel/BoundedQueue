@@ -75,7 +75,7 @@ public class BoundedQueue<T> {
 
         synchronized (bufferAccessLock) {
 
-            //without this, a consumer could wait forever if the producer already produced and notified before the consumer was waiting
+            //without this, a consumer could wait 4ever if the producer already produced and notified before the consumer was waiting
             if (contains(element) && !findRegisteredConsumer(element).isPresent()) {
                 bufferAccessLock.notifyAll();
                 return takeInternal(element);
